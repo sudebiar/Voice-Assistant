@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'frmAdd.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
 
 from PyQt5 import QtCore, QtGui, QtWidgets , QtSql 
 
@@ -13,7 +5,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets , QtSql
 class Ui_frmAdd(object):
     def setupUi(self, frmAdd):
         frmAdd.setObjectName("frmAdd")
-        frmAdd.resize(512, 453)
+        frmAdd.resize(512, 700)
         frmAdd.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(frmAdd)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
@@ -112,10 +104,7 @@ class Ui_frmAdd(object):
     def contextMenu(self,pos):
         self.menu = QtWidgets.QMenu()
         self.deleteAct = QtWidgets.QAction('حذف')
-#         self.menu.addSeparator()
-#         self.editAct = QtWidgets.QAction('Edit')
         self.menu.addAction(self.deleteAct)
-#         self.menu.addAction(self.editAct)
         self.deleteAct.triggered.connect(self.deleteAction)
         self.menu.exec_(QtGui.QCursor.pos())
 
@@ -221,7 +210,6 @@ class Ui_frmAdd(object):
     
         self.tableView.setModel(model);
         self.tableView.hideColumn(0)
-#         self.tableView.hideColumn(3)
         model.setHeaderData(1, QtCore.Qt.Horizontal, "نام دستور");
         model.setHeaderData(2, QtCore.Qt.Horizontal, "دستور");
         model.setHeaderData(3, QtCore.Qt.Horizontal, "نوع دستور");
@@ -238,8 +226,6 @@ class Ui_frmAdd(object):
         qry = QtSql.QSqlQuery()
         if(self.lineEdit.text()!= "" ) and  (self.lineEditName.text()!= "" ):
             qry.prepare("insert into commandRec(name,command,cmd) values ('"+self.name+"','"+self.lineEdit.text()+"','"+self.cmd+"')")
-
-    #         qry.exec()
     
             if(qry.exec()):
               

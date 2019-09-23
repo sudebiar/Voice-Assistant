@@ -1,5 +1,7 @@
 
 from PyQt5 import QtWidgets, QtSql,QtCore
+import sys,os
+
 
 def createConnection():
 
@@ -8,6 +10,6 @@ def createConnection():
     db.setDatabaseName("voiceAssistant.db")
     db.open()
     if not db.open():
-        QtWidgets.QMessageBox.critical(None,"خطا","امکان وصل شدن به پایگاه داده وجود ندارد", QtWidgets.QMessageBox.Cancel)
+        QtWidgets.QMessageBox.critical(None,"خطا","اتصال به پایگاه داده ممکن نیست", QtWidgets.QMessageBox.Cancel)
         return False
     return True

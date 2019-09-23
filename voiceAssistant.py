@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'voice.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets ,QtSql
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -17,6 +8,7 @@ import DbConnection
 from googletrans import Translator
 import webbrowser
 from FormAdd import Ui_frmAdd
+import playsound
 
 
 
@@ -128,6 +120,7 @@ class Ui_MainWindow(object):
         cls.processSignal.connect(self.process)
         
 
+        self.intCounter = False
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -149,6 +142,7 @@ class Ui_MainWindow(object):
         dialog = QDialog()
         dialog.ui = Ui_frmAdd()
         dialog.ui.setupUi(dialog)
+        dialog.setStyleSheet(open('matt.css').read())
         dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         dialog.exec_()
     
@@ -163,7 +157,10 @@ class Ui_MainWindow(object):
         self.speechThread.start()
 
 
+    def ret(self):
 
+        self.btnSpeak.setEnabled(False)
+        self.speechThread.start()
         
     def process(self):
         self.textVoice.clear()
@@ -173,8 +170,13 @@ class Ui_MainWindow(object):
         
     def dbProcess(self):
         self.cellName = self.textVoice.toPlainText()
+        if self.cellName ==  "error :ارتباط با اینترنت  امکان پذیر نیست":
+            if not self.intCounter: 
+                playsound.playsound('noInternet.mp3', True)
+                self.intCounter = True
         if "error" in self.cellName:
             self.textVoice.setText(self.cellName)
+            self.ret()
             return
         qry = QtSql.QSqlQuery()
 
@@ -190,19 +192,22 @@ class Ui_MainWindow(object):
                   
                     try:
                         os.startfile(cell2)
+                        self.intCounter =False
                     except:
-                        pass
+                        playsound.playsound('notAvailible.mp3', True)
                 elif(self.cell3 == "web"):
                     try:
                         url = cell2
-    #                     firefox = webbrowser.get("C:/Program Files (x86)/Mozilla Firefox/firefox.exe %s")
-    #                     firefox.open_new_tab(url)
                         webbrowser.open_new_tab(url)
+                        self.intCounter =False
                     except:
-                        pass   
+                        playsound.playsound('notAvailible.mp3', True)   
             except:
                 self.textVoice.setText("دستور ({}) پیدا نشد.دستور را وارد کنید.".format(self.cellName))
- 
+                
+                playsound.playsound('notAvailible.mp3', True)
+        self.ret()
+        
     def handleComboMic(self):
         
         SpeechCls.Speech().SetMicName(str(self.comboMic.currentText()))
@@ -223,7 +228,6 @@ class SpeechThread(QtCore.QThread):
         cls.processSignal.emit()
         self.returnText()
     def returnText(self):
-#         print(self.speechText +  "     From Button Function")
         return self.speechText
                 
         
@@ -234,5 +238,7 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
+    QtGui.QFontDatabase.addApplicationFont('Vazir.ttf')
+    MainWindow.setStyleSheet(open('matt.css').read())
     MainWindow.show()
     sys.exit(app.exec_())
